@@ -4,8 +4,8 @@ import {
   NodeType,
   tagMap,
   elementNode,
-  idNodeMap,
-  INode,
+  idNodeMap2,
+  INode2,
 } from './types';
 
 const tagMap: tagMap = {
@@ -195,12 +195,12 @@ export function buildNodeWithSN(
   n: serializedNodeWithId,
   options: {
     doc: Document;
-    map: idNodeMap;
+    map: idNodeMap2;
     skipChild?: boolean;
     hackCss: boolean;
-    afterAppend?: (n: INode) => unknown;
+    afterAppend?: (n: INode2) => unknown;
   },
-): INode | null {
+): INode2 | null {
   const { doc, map, skipChild = false, hackCss = true, afterAppend } = options;
   let node = buildNode(n, { doc, hackCss });
   if (!node) {
@@ -220,8 +220,8 @@ export function buildNodeWithSN(
     node = doc;
   }
 
-  (node as INode).__sn = n;
-  map[n.id] = node as INode;
+  (node as INode2).__rsn = n;
+  map[n.id] = node as INode2;
 
   if (
     (n.type === NodeType.Document || n.type === NodeType.Element) &&
@@ -247,11 +247,11 @@ export function buildNodeWithSN(
     }
   }
 
-  return node as INode;
+  return node as INode2;
 }
 
-function visit(idNodeMap: idNodeMap, onVisit: (node: INode) => void) {
-  function walk(node: INode) {
+function visit(idNodeMap: idNodeMap2, onVisit: (node: INode2) => void) {
+  function walk(node: INode2) {
     onVisit(node);
   }
 
@@ -262,8 +262,8 @@ function visit(idNodeMap: idNodeMap, onVisit: (node: INode) => void) {
   }
 }
 
-function handleScroll(node: INode) {
-  const n = node.__sn;
+function handleScroll(node: INode2) {
+  const n = node.__rsn;
   if (n.type !== NodeType.Element) {
     return;
   }
@@ -286,13 +286,13 @@ function rebuild(
   n: serializedNodeWithId,
   options: {
     doc: Document;
-    onVisit?: (node: INode) => unknown;
+    onVisit?: (node: INode2) => unknown;
     hackCss?: boolean;
-    afterAppend?: (n: INode) => unknown;
+    afterAppend?: (n: INode2) => unknown;
   },
-): [Node | null, idNodeMap] {
+): [Node | null, idNodeMap2] {
   const { doc, onVisit, hackCss = true, afterAppend } = options;
-  const idNodeMap: idNodeMap = {};
+  const idNodeMap: idNodeMap2 = {};
   const node = buildNodeWithSN(n, {
     doc,
     map: idNodeMap,

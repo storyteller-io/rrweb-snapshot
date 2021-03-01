@@ -68,8 +68,16 @@ export interface INode extends Node {
   __sn: serializedNodeWithId;
 }
 
+export interface INode2 extends Node {
+  __rsn: serializedNodeWithId;
+}
+
 export type idNodeMap = {
   [key: number]: INode;
+};
+
+export type idNodeMap2 = {
+  [key: number]: INode2;
 };
 
 export type MaskInputOptions = Partial<{
